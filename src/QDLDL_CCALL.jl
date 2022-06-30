@@ -94,14 +94,6 @@ end
 # qdldl(A) uses the default AMD ordering
 # qdldl(A,perm=p) uses a caller specified ordering
 # qdldl(A,perm = nothing) factors without reordering
-#
-# qdldl(A,logical=true) produces a logical factorisation only
-#
-# qdldl(A,signs = s, thresh_eps = ϵ, thresh_delta = δ) produces
-# a factorization with dynamic regularization based on the vector
-# of signs in s and using regularization parameters (ϵ,δ).  The
-# scalars (ϵ,δ) = (1e-12,1e-7) by default.   By default s = nothing,
-# and no regularization is performed.
 
 function qdldl(A::SparseMatrixCSC{Tf,Ti};
   perm::Union{Array{Ti},Nothing}=amd(A)

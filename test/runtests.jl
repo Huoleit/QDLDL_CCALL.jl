@@ -1,29 +1,20 @@
-include("../src/QDLDL_CCALL.jl")
+using Random, Test
+rng = Random.MersenneTwister(12345)
 
-import .QDLDL_CCALL
-using SparseArrays
-using LinearAlgebra
-using Test
+function random_psd(n)
 
-@testset "QDLDL" begin
-  @testset "No permutation" begin
-    An = 15
-    mat = sprand(An, An, 0.5) + sparse(I * 1.0, An, An)
-    A = transpose(mat) * mat
+  A = sprandn(rng, n, n, 0.2)
+  A = A + A'
+  A = A + Diagonal(((sum(abs.(A), dims=1)[:]))) #make diagonally dominant
 
-    fac = QDLDL_CCALL.qdldl(A, perm=nothing)
-    a = (fac.L + I) * inv(fac.Dinv) * transpose(fac.L + I)
-    @test A ≈ a atol = 1e-14
-  end
-
-  @testset "AMD permutation" begin
-    An = 15
-    mat = sprand(An, An, 0.5) + sparse(I * 1.0, An, An)
-    A = transpose(mat) * mat
-
-    fac = QDLDL_CCALL.qdldl(A)
-    a = (fac.L + I) * inv(fac.Dinv) * transpose(fac.L + I)
-    @test permute(A, fac.perm, fac.perm) ≈ a atol = 1e-14
-  end
 end
 
+
+@testset "All Unit Tests" begin
+
+  include("./UnitTests/basic.jl")
+  include("./UnitTests/factorization.jl")
+  include("./UnitTests/non-quasidef.jl")
+  include("./UnitTests/inertia.jl")
+
+end
