@@ -1,6 +1,6 @@
 module QDLDL_CCALL
 
-export qdldl, \, solve, solve!, refactor!, positive_inertia
+export qdldl, \, solve, solve!, positive_inertia
 
 using AMD, SparseArrays
 using LinearAlgebra: istriu, triu, Diagonal
@@ -137,16 +137,6 @@ end
 
 function Base.:\(F::QDLDLFactorisation, b)
   return solve(F, b)
-end
-
-
-function refactor!(F::QDLDLFactorisation)
-
-  #It never makes sense to call refactor for a logical
-  #factorization since it will always be the same.  Calling
-  #this function implies that we want a numerical factorization
-
-  factor!(F.workspace)
 end
 
 
